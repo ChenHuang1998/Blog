@@ -2,17 +2,9 @@
     margin: 0;
     padding: 0;
 }
-div.nav{
-    background-color: #eee;
-    border-bottom: 1px solid #ccc;
-    padding: 10px 5px;
-
+body {
+    margin-top: 80px!important;
 }
-div.nav a{
-    text-decoration: none;
-    color: black;
-    padding: 5px 10px;
-}
-div.nav a.logo{
-    display: inline-block;
+ul{
+    list-style-type: none!important;
 }
