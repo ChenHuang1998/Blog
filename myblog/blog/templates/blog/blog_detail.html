@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load myfilter %}
 
 {% block title %}
     {{ blog.title }}
@@ -19,8 +20,9 @@
                     <li>作者：{{ blog.author }}</li>
                     <li>分类:<a href="{% url 'blogs_with_type' blog.blog_type.pk %}">{{ blog.blog_type }}</a></li>
                     <li>发表时期：{{ blog.created_time|date:'Y-m-d H:n:s' }}</li>
+                    <li>阅读数：{{ blog.get_read_num }}</li>
                 </ul>
-                <div class="blog-content">{{ blog.content }}</div>
+                <div class="blog-content">{{ blog.content|mk|safe }}</div>
                 <div class="blog-more">
                     <p>上一篇:
                         {% if previous_blog %}
@@ -36,6 +38,41 @@
                             没有博客了
                         {% endif %}
                     </p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-10 col-xs-offset-1">
+                <div class="comment-area">
+                    <h3 class="comment-area-title">提交评论区域</h3>
+                    {% if user.is_authenticated %}
+
+                        <form action="{% url 'update_comment' %}" method="post" style="overflow: hidden">
+                        {% csrf_token %}
+                            <div class="form-group">
+                                <label for="comment_text">{{ user.username }},欢迎评论～</label>
+                                <textarea name="text" class="form-control" id="comment_text" rows="5"></textarea>
+                            </div>
+                            <input type="hidden" name="object_id" value="{{ blog.pk }}">
+                            <input type="hidden" name="content_type" value="blog">
+                            <input type="submit" value="评论" class="btn btn-primary" style="float: right">
+                        </form>
+                    {% else %}
+                        未登录,登录之后才能评论
+                        <a href="{% url 'login' %}?from={{ request.get_full_path }}">登录</a>
+                    {% endif %}
+                </div>
+                <div class="comment-area">
+                    <h3 class="comment-area-title">评论列表区域</h3>
+                    {% for comment in comments %}
+                        <div>
+                            {{ comment.user.username }}
+                            （{{ comment.comment_time|date:'Y-m-d H:n:s'  }}）
+                            {{ comment.text }}
+                        </div>
+                    {% empty %}
+                        暂无评论
+                    {% endfor %}
                 </div>
             </div>
         </div>
