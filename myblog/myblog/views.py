@@ -3,8 +3,9 @@ from django.shortcuts import render_to_response, render, redirect
 from django.contrib.contenttypes.models import ContentType
 from django.utils import timezone
 from django.contrib import auth
+from django.contrib.auth.models import User
 from django.urls import reverse
-from myblog.forms import LoginForm
+from myblog.forms import LoginForm,RegForm
 from django.core.cache import cache
 from read_statistics.utils import *
 from blog.models import Blog
@@ -47,17 +48,30 @@ def login(request):
     if request.method == 'POST':
         login_form = LoginForm(request.POST)
         if login_form.is_valid():
-            username = login_form.cleaned_data['username']
-            password = login_form.cleaned_data['password']
-            user = auth.authenticate(request, username=username, password=password)
-            if user is not None:
-                auth.login(request, user)
-                print(request.GET.get('from'))
-                return redirect(request.GET.get('from', reverse('index')))
-            else:
-                login_form.add_error(None, '用户名密码不正确')
+            user = login_form.cleaned_data['user']
+            auth.login(request, user)
+            return redirect(request.GET.get('from', reverse('index')))
 
     else:
         login_form = LoginForm()
 
     return render(request, 'login.html',locals())
+
+
+def register(request):
+    if request.method == 'POST':
+        register_form = RegForm(request.POST)
+        if register_form.is_valid():
+            username = register_form.cleaned_data['username']
+            email = register_form.cleaned_data['email']
+            password = register_form.cleaned_data['password']
+            user = User.objects.create_user(username, email, password)
+            user.save()
+            user = auth.authenticate(username=username,password=password)
+            auth.login(request, user)
+            return redirect(request.GET.get('from', reverse('index')))
+
+    else:
+        register_form = RegForm()
+
+    return render(request, 'register.html',locals())

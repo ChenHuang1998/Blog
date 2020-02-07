@@ -6,6 +6,7 @@ from comment.models import Comment
 
 
 def update_comment(request):
+    user = request.user
     referer = request.META.get('HTTP_REFERER', reverse('index'))
     if not request.user.is_authenticated:
         return render(request, 'error.html', {'message': '用户未登录', 'redirect_to': referer})
