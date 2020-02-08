@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'read_statistics',
     'comment',
     'mdeditor',
+    'ckeditor',
 
 ]
 
@@ -129,6 +130,24 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR,'static')]
 
 MEDIA_URL = '/uploads/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
+
+CKEDITOR_CONFIGS = {
+    'comment_ckeditor':{
+        'toolbar': 'custom',
+        'toolbar_custom':[
+            ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript'],
+            ['TextColor', 'BGColor', 'RemoveFormat'],
+            ['NumberedList', 'BulletedList'],
+            ['Link', 'Unlink'],
+            ['Smiley', 'SpecialChar', 'Blockquote'],
+        ],
+        'width': 'auto',
+        'height': '180',
+        'tabSpaces': 4,
+        'removePlugins': 'elementspath',
+        'resize_enabled': False,
+    }
+}
 
 # 自定义参数
 EACH_PAGE_BLOGS_NUMBER = 7

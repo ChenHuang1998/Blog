@@ -6,6 +6,7 @@ from comment.models import Comment
 from django.db.models import Count
 from blog.models import *
 from read_statistics.utils import read_statistics_once_read
+from comment.forms import CommentForm
 from django.contrib.auth.models import User
 # Create your views here.
 
@@ -65,7 +66,8 @@ def blog_detail(request, blog_pk):
     previous_blog = Blog.objects.filter(created_time__gt=blog.created_time).last()
     next_blog = Blog.objects.filter(created_time__lt=blog.created_time).first()
     blog_content_type = ContentType.objects.get_for_model(blog)
-    comments = Comment.objects.filter(content_type=blog_content_type,object_id=blog.pk)
+    comments = Comment.objects.filter(content_type=blog_content_type,object_id=blog.pk, parent=None).order_by('-comment_time')
+    comment_form = CommentForm(initial={'content_type': blog_content_type, 'object_id': blog_pk,'reply_comment_id': 0})
     response = render(request, 'blog/blog_detail.html', locals())
     response.set_cookie(read_cookie_key, 'true', max_age=60)
     return response
