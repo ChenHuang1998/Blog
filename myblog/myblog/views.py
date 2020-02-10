@@ -1,5 +1,6 @@
 import datetime
 from django.shortcuts import render_to_response, render, redirect
+from django.http import JsonResponse
 from django.contrib.contenttypes.models import ContentType
 from django.utils import timezone
 from django.contrib import auth
@@ -56,6 +57,18 @@ def login(request):
         login_form = LoginForm()
 
     return render(request, 'login.html',locals())
+
+
+def login_for_modal(request):
+    data = {}
+    login_form = LoginForm(request.POST)
+    if login_form.is_valid():
+        user = login_form.cleaned_data['user']
+        auth.login(request, user)
+        data['status'] = 'success'
+    else:
+        data['status'] = 'error'
+    return JsonResponse(data)
 
 
 def register(request):
