@@ -1,13 +1,12 @@
 from django.shortcuts import get_object_or_404, render
 from django.core.paginator import Paginator
 from django.conf import settings
-from django.contrib.contenttypes.models import ContentType
-from myblog.forms import LoginForm
+from user.forms import LoginForm
 from django.db.models import Count
 from blog.models import *
 from read_statistics.utils import read_statistics_once_read
 
-from django.contrib.auth.models import User
+
 # Create your views here.
 
 

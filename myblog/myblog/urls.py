@@ -26,9 +26,7 @@ urlpatterns = [
     path('blog/',include('blog.urls')),
     path('comment/', include('comment.urls')),
     path('likes/', include('likes.urls')),
-    path('login/', login, name='login'),
-    path('login_for_modal/', login_for_modal, name='login_for_modal'),
-    path('register/', register, name='register'),
+    path('user/', include('user.urls')),
 ]
 
 if settings.DEBUG:
